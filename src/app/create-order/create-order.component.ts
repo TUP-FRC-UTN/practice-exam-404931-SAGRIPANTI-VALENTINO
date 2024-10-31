@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ApiService } from '../service/api.service';
 import { Order } from '../models/order';
 import { CommonModule } from '@angular/common';
@@ -18,9 +18,9 @@ export class CreateOrderComponent implements OnInit{
   discountDone : Boolean = false
 
   order: FormGroup = new FormGroup({
-    nombre : new FormControl(''),
-    email : new FormControl(''),
-    productos: new FormArray([]),
+    nombre : new FormControl('', [Validators.required, Validators.minLength(3)]),
+    email : new FormControl('', [Validators.required, Validators.email]),
+    productos: new FormArray([], this.validarCantProd()),
     total : new FormControl(''),
     orderCode : new FormControl(''),
     timestamp : new FormControl(new Date())
@@ -38,8 +38,8 @@ export class CreateOrderComponent implements OnInit{
   }
   agregarProducto() {
     const producto = new FormGroup({
-      productId: new FormControl(''),
-      cantidad: new FormControl(0),
+      productId: new FormControl('', Validators.required),
+      cantidad: new FormControl(0, [Validators.required, Validators.min(1)]),
       stock: new FormControl(''),
       precio: new FormControl('')
     });
@@ -123,5 +123,13 @@ export class CreateOrderComponent implements OnInit{
     code = firstLetterName + lastFourLetterEmail + time.toString()
 
     return code
+  }
+  ///VALIDACIONES
+
+  validarCantProd(): ValidatorFn {
+    return (control : AbstractControl): ValidationErrors | null => {
+      const array = control as FormArray
+      return array.length < 1 ? {'minProd' : true} : null
+    }
   }
 }
