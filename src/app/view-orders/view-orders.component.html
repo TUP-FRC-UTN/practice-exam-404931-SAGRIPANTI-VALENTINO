@@ -1,12 +1,12 @@
 <div class="container">
     <h1> Orders </h1>
     <div class="d-flex justify-content-end">
-        <button type="button" routerLink='/create-order' class="btn btn-primary"> Create New Order </button>
+        <button type="button" routerLink="/create-order" class="btn btn-primary"> Create New Order </button>
     </div>
     <br>
     <div class="card">
         <div class="card-body">
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" [formControl]="search">
             <br>
             <table class="table table-striped">
                 <thead>
@@ -20,13 +20,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (order of allOrders; track $index) {
+                    @for (order of filteredData; track $index) {
                         <tr>
                             <td> {{order.orderCode}} </td>
                             <td> {{order.customerName}} </td>
                             <td> {{order.email}} </td>
-                            <td> {{order.products.length + " items"}} </td>
-                            <td> {{order.timestamp | date: 'dd MM yyyy'}} </td>
+                            <!-- <td> {{order.products.length + " items"}} </td> -->
+                            <td> {{order.timestamp | date: 'dd/MM/yyyy'}} </td>
                             <td> {{"$" + order.total}} </td>
                         </tr>
                     }
