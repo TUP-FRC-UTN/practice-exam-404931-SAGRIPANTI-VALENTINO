@@ -31,6 +31,9 @@
                     @if (order.controls['email'].errors?.['email']) {
                         <div class="text-danger"> Debe ingresar correo correcto </div>
                     }
+                    @if (order.controls['email'].errors?.['tooMany']) {
+                        <div class="text-danger"> Hiciste muchos pedidos en los ultimos tres dias </div>
+                    }
                 }
             </div>
         </div>
@@ -61,6 +64,11 @@
                             <label class="form-label"> Cantidad </label> 
                             <br>
                             <input type="number" class="form-control" formControlName="cantidad" (change)="onProductChange($index)">
+                            @if (productos.errors?.['minProd']) {
+                                <div class="text-danger">
+                                    Cantidad invalida
+                                </div>
+                            }
                         </div>
                         <div class="col-3">
                             <label class="form-label"> Precio </label> 

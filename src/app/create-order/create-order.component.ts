@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidator, AsyncValidatorFn, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ApiService } from '../service/api.service';
 import { Order } from '../models/order';
 import { CommonModule } from '@angular/common';
 import { Product } from '../models/product';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-order',
@@ -19,7 +20,7 @@ export class CreateOrderComponent implements OnInit{
 
   order: FormGroup = new FormGroup({
     nombre : new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email : new FormControl('', [Validators.required, Validators.email]),
+    email : new FormControl('', [Validators.required, Validators.email], this.validarComprarEmail()),
     productos: new FormArray([], [this.validarCantProd(), this.validarProductoUnico()]),
     total : new FormControl(''),
     orderCode : new FormControl(''),
@@ -90,7 +91,8 @@ export class CreateOrderComponent implements OnInit{
         });
     }
     this.updateTotal()
-    this.productos.setValidators(this.validarProductoUnico());
+    this.productos.setValidators(this.validarCantProd());
+    this.productos.setValidators(this.validarProductoUnico()); //esto para que se aplique al hacer el metodo
   }
   searchNameById(id : string) {
     return this.allProducts.find(p => p.id === id)?.name
@@ -126,12 +128,12 @@ export class CreateOrderComponent implements OnInit{
 
     return code
   }
-  ///VALIDACIONES
+  ///VALIDACIONES SINCRONICAS
 
   validarCantProd(): ValidatorFn {
     return (control : AbstractControl): ValidationErrors | null => {
       const array = control as FormArray
-      return array.length <= 0 && array.length > 10 ? {'minProd' : true} : null
+      return array.length < 1 && array.length > 10 ? {'minProd' : true} : null
     }
   }
   validarProductoUnico(): ValidatorFn {
@@ -140,6 +142,21 @@ export class CreateOrderComponent implements OnInit{
       const ids = array.controls.map(control => control.get("productId")?.value)
       const hasDuplicates = ids.some((id, index) => ids.indexOf(id) !== index)
       return hasDuplicates ? { 'duplicates' : true} : null
+    }
+  }
+  //VALIDACIONES ASINCRONICAS
+  validarComprarEmail(): AsyncValidatorFn {
+    return (control : AbstractControl): Observable<ValidationErrors | null> => {
+      return this.serviceOrder.getOrderByEmail(control.value).pipe(
+        map(orders => {
+          const recentOrders = orders.filter(order => {
+            const orderDate = new Date(order.timestamp)
+            const now = new Date()
+            return (now.getTime() - orderDate.getTime()) < 24 * 60 * 60 * 1000
+          })
+          return recentOrders.length > 3 ? {'tooMany' : true} : null
+        })
+      )
     }
   }
 }
