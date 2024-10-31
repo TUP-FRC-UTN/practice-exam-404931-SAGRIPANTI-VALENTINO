@@ -7,8 +7,8 @@ import { Order } from '../models/order';
   providedIn: 'root'
 })
 export class ApiService {
-  http : HttpClient = inject(HttpClient)
-  urlBase : string = "http://localhost:3000"
+  private http : HttpClient = inject(HttpClient)
+  private urlBase : string = "http://localhost:3000"
 
 
   getProducts() {
