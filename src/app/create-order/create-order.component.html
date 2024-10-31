@@ -1,1 +1,59 @@
-<p>create-order works!</p>
+<div class="container">
+    <h1> Create New Order </h1>
+    <br>
+
+    <form [formGroup]="order" (ngSubmit)="sendForm()">
+
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label"> Nombre: </label> 
+                <br>
+                <input type="text" class="form-control" formControlName="nombre">
+            </div>
+            <div class="col-6">
+                <label class="form-label"> Email: </label> 
+                <br>
+                <input type="email" class="form-control" formControlName="email">
+            </div>
+        </div>
+        
+        <div class="card mt-5">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span> <b>Productos</b> </span>
+                <button type="button" class="btn btn-primary" (click)="agregarProducto()">+</button>
+            </div>
+            <div class="card-body" formArrayName="productos">
+                @for (prod of productos.controls; track $index) {
+                    <div class="row" [formGroupName]="$index">
+                        <div class="col-3">
+                            <label class="form-label"> Producto </label> 
+                            <br>
+                            <select class="form-select" formControlName="productId">
+                                @for (p of allProducts; track $index) {
+                                    <option [value]="p.id"> {{p.name}} </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label"> Cantidad </label> 
+                            <br>
+                            <input type="number" class="form-control" formControlName="cantidad">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label"> Precio </label> 
+                            <br>
+                            <input type="number" class="form-control" formControlName="cantidad">
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                    
+                }
+            </div>
+        </div>
+        
+
+
+
+
+    </form>
+</div>
