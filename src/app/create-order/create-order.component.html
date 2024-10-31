@@ -56,7 +56,22 @@
                 }
             </div>
         </div>
-        
+        <br>
+        <div class="card mt-5">
+            <div class="card-header">
+                <b>Productos Seleccionados</b>
+            </div>
+            <div class="card-body">
+                <ul>
+                    @for (p of order.controls['productos'].value; track $index) {
+                        <li>
+                            {{searchNameById(p.productId) + " - Cantidad: " + p.cantidad + " - Precio: $" + p.precio + " - Stock: " + p.stock}}
+                        </li>
+                    }
+                </ul>
+                
+            </div>
+        </div>
 
 
 
