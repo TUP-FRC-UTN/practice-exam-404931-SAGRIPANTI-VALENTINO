@@ -23,7 +23,7 @@ export class CreateOrderComponent implements OnInit{
     productos: new FormArray([]),
     total : new FormControl(''),
     orderCode : new FormControl(''),
-    timestamp : new FormControl('')
+    timestamp : new FormControl(new Date())
   })
 
   allProducts: Product[] = []
@@ -53,23 +53,28 @@ export class CreateOrderComponent implements OnInit{
     this.updateTotal()
   }
   sendForm() {
-    console.log("Esto es en formFGropu: " + this.order);
+    this.order.patchValue(
+      {
+        orderCode : this.generateOrderCode()
+      }
+    )
+    console.log(this.order)
 
-    if (this.order.valid) {
-      const order = this.order.value as Order
-      console.log("Esto es casteado a Order: " + order);
+    // if (this.order.valid) {
+    //   const order = this.order.value as Order
+    //   console.log("Esto es casteado a Order: " + order);
       
-      this.serviceOrder.postOrder(order).subscribe({
-        next: () => {
-          alert("Orden creada con exito!")
-          this.order.reset()
-        },
-        error: (error) => {
-          alert("Hubo un error al querer crear la orden...")
-          console.error(error)
-        }
-      })
-    }
+    //   this.serviceOrder.postOrder(order).subscribe({
+    //     next: () => {
+    //       alert("Orden creada con exito!")
+    //       this.order.reset()
+    //     },
+    //     error: (error) => {
+    //       alert("Hubo un error al querer crear la orden...")
+    //       console.error(error)
+    //     }
+    //   })
+    // }
     
   }
   onProductChange(index : number) {
@@ -106,5 +111,17 @@ export class CreateOrderComponent implements OnInit{
     } else {
       this.order.patchValue({ total: total }) 
     }
+  }
+  generateOrderCode() {
+    let code = ""
+    let name = this.order.controls['nombre'].value as string
+    let email = this.order.controls['email'].value as string
+    let firstLetterName = name.charAt(0)
+    let lastFourLetterEmail = email.slice(-4)
+    let time = this.order.controls['timestamp'].value as Date
+
+    code = firstLetterName + lastFourLetterEmail + time.toString()
+
+    return code
   }
 }
