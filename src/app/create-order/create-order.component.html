@@ -37,7 +37,7 @@
                         <div class="col-3">
                             <label class="form-label"> Cantidad </label> 
                             <br>
-                            <input type="number" class="form-control" formControlName="cantidad">
+                            <input type="number" class="form-control" formControlName="cantidad" (change)="onProductChange($index)">
                         </div>
                         <div class="col-3">
                             <label class="form-label"> Precio </label> 
@@ -72,7 +72,26 @@
                 
             </div>
         </div>
-
+        <br>
+        <div class="card mt-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <h6><b>Total:</b></h6>
+                        <br>
+                        @if (discountDone) {
+                            <div class="text-success">
+                                Se ha hecho un descuento del 10%
+                            </div>
+                        }
+                    </div>
+                    <div class="col-4">
+                        <p> <b> $ {{order.value.total}} </b> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 

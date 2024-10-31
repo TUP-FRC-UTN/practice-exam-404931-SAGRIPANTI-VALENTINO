@@ -15,6 +15,7 @@ import { Product } from '../models/product';
 export class CreateOrderComponent implements OnInit{
   
   serviceOrder : ApiService = inject(ApiService)
+  discountDone : Boolean = false
 
   order: FormGroup = new FormGroup({
     nombre : new FormControl(''),
@@ -38,16 +39,18 @@ export class CreateOrderComponent implements OnInit{
   agregarProducto() {
     const producto = new FormGroup({
       productId: new FormControl(''),
-      cantidad: new FormControl(''),
+      cantidad: new FormControl(0),
       stock: new FormControl(''),
       precio: new FormControl('')
     });
     this.productos.push(producto);
+    this.updateTotal()
   }
   
 
   quitarProducto(index : number) {
     this.productos.removeAt(index)
+    this.updateTotal()
   }
   sendForm() {
     console.log("Esto es en formFGropu: " + this.order);
@@ -80,8 +83,28 @@ export class CreateOrderComponent implements OnInit{
             stock: selectedProduct.stock
         });
     }
+    this.updateTotal()
   }
   searchNameById(id : string) {
     return this.allProducts.find(p => p.id === id)?.name
+  }
+  calculateTotal() {
+    let total = 0
+    this.productos.controls.forEach(p => {
+      const cantidad = p.get('cantidad')?.value
+      const precio = p.get('precio')?.value
+
+      total += cantidad * precio
+    })
+    return total
+  }
+  updateTotal() {
+    const total = this.calculateTotal();
+    this.discountDone = total > 1000;
+    if (this.discountDone) {
+      this.order.patchValue({ total: total * 0.9 })
+    } else {
+      this.order.patchValue({ total: total }) 
+    }
   }
 }
