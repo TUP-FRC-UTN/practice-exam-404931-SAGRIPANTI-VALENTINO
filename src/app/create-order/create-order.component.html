@@ -28,7 +28,7 @@
                         <div class="col-3">
                             <label class="form-label"> Producto </label> 
                             <br>
-                            <select class="form-select" formControlName="productId">
+                            <select class="form-select" formControlName="productId" (change)="onProductChange($index)">
                                 @for (p of allProducts; track $index) {
                                     <option [value]="p.id"> {{p.name}} </option>
                                 }
@@ -42,11 +42,17 @@
                         <div class="col-3">
                             <label class="form-label"> Precio </label> 
                             <br>
-                            <input type="number" class="form-control" formControlName="cantidad">
+                            <input type="text" class="form-control" formControlName="precio" [readonly]="true">
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-3">
+                            <label class="form-label"> Stock </label> 
+                            <br>
+                            <div class="d-flex align-items-end">
+                                <input type="text" class="form-control" formControlName="stock" [readonly]="true">
+                            <button class="btn btn-danger ms-2" type="button" (click)="quitarProducto($index)"> X </button>
+                            </div>
+                        </div>
                     </div>
-                    
                 }
             </div>
         </div>

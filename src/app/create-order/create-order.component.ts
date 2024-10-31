@@ -69,4 +69,16 @@ export class CreateOrderComponent implements OnInit{
     }
     
   }
+  onProductChange(index : number) {
+    const selectedProductId = this.productos.at(index).get('productId')?.value;
+    const selectedProduct = this.allProducts.find(p => p.id === selectedProductId);
+
+    if (selectedProduct) {
+        // Asigna el precio y stock al formulario
+        this.productos.at(index).patchValue({
+            precio: selectedProduct.price, // Asegúrate de que 'precio' sea la propiedad correcta
+            stock: selectedProduct.stock // Asegúrate de que 'stock' sea la propiedad correcta
+        });
+    }
+  }
 }
