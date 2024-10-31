@@ -60,21 +60,21 @@ export class CreateOrderComponent implements OnInit{
     )
     console.log(this.order)
 
-    // if (this.order.valid) {
-    //   const order = this.order.value as Order
-    //   console.log("Esto es casteado a Order: " + order);
+    if (this.order.valid) {
+      const order = this.order.value as Order
+      console.log("Esto es casteado a Order: " + order);
       
-    //   this.serviceOrder.postOrder(order).subscribe({
-    //     next: () => {
-    //       alert("Orden creada con exito!")
-    //       this.order.reset()
-    //     },
-    //     error: (error) => {
-    //       alert("Hubo un error al querer crear la orden...")
-    //       console.error(error)
-    //     }
-    //   })
-    // }
+      this.serviceOrder.postOrder(order).subscribe({
+        next: () => {
+          alert("Orden creada con exito!")
+          this.order.reset()
+        },
+        error: (error) => {
+          alert("Hubo un error al querer crear la orden...")
+          console.error(error)
+        }
+      })
+    }
     
   }
   onProductChange(index : number) {
