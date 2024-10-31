@@ -8,12 +8,30 @@
             <div class="col-6">
                 <label class="form-label"> Nombre: </label> 
                 <br>
-                <input type="text" class="form-control" formControlName="nombre">
+                <input type="text" class="form-control" formControlName="nombre"
+                [ngClass]="{'is-invalid': order.controls['nombre'].invalid && (order.controls['nombre'].dirty || order.controls['nombre'].touched), 'is-valid' : order.controls['nombre'].valid}">
+                @if (order.controls['nombre'].invalid && (order.controls['nombre'].dirty || order.controls['nombre'].touched)) {
+                    @if (order.controls['nombre'].errors?.['required']) {
+                        <div class="text-danger"> Campo Obligatorio </div>
+                    }
+                    @if (order.controls['nombre'].errors?.['minlength']) {
+                        <div class="text-danger"> Debe ingresar minimo 3 caracteres </div>
+                    }
+                }
             </div>
             <div class="col-6">
                 <label class="form-label"> Email: </label> 
                 <br>
-                <input type="email" class="form-control" formControlName="email">
+                <input type="email" class="form-control" formControlName="email"
+                [ngClass]="{'is-invalid': order.controls['email'].invalid && (order.controls['email'].dirty || order.controls['email'].touched), 'is-valid' : order.controls['email'].valid}">
+                @if (order.controls['email'].invalid && (order.controls['email'].dirty || order.controls['email'].touched)) {
+                    @if (order.controls['email'].errors?.['required']) {
+                        <div class="text-danger"> Campo Obligatorio </div>
+                    }
+                    @if (order.controls['email'].errors?.['email']) {
+                        <div class="text-danger"> Debe ingresar correo correcto </div>
+                    }
+                }
             </div>
         </div>
         
@@ -33,6 +51,11 @@
                                     <option [value]="p.id"> {{p.name}} </option>
                                 }
                             </select>
+                            @if (productos.errors?.['duplicates']) {
+                                <div class="text-danger">
+                                    No se puede elegir el mismo producto
+                                </div>
+                            }
                         </div>
                         <div class="col-3">
                             <label class="form-label"> Cantidad </label> 
@@ -94,7 +117,7 @@
         </div>
         <br>
         <div class="d-flex justify-content-end mb-3">
-            <button type="submit" class="btn btn-primary"> Create Orden</button>
+            <button type="submit" class="btn btn-primary" [disabled]="order.invalid"> Create Orden</button>
         </div>        
     </form>
 </div>

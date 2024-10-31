@@ -20,7 +20,7 @@ export class CreateOrderComponent implements OnInit{
   order: FormGroup = new FormGroup({
     nombre : new FormControl('', [Validators.required, Validators.minLength(3)]),
     email : new FormControl('', [Validators.required, Validators.email]),
-    productos: new FormArray([], this.validarCantProd()),
+    productos: new FormArray([], [this.validarCantProd(), this.validarProductoUnico()]),
     total : new FormControl(''),
     orderCode : new FormControl(''),
     timestamp : new FormControl(new Date())
@@ -45,6 +45,7 @@ export class CreateOrderComponent implements OnInit{
     });
     this.productos.push(producto);
     this.updateTotal()
+    this.productos.setValidators(this.validarProductoUnico())
   }
   
 
@@ -89,6 +90,7 @@ export class CreateOrderComponent implements OnInit{
         });
     }
     this.updateTotal()
+    this.productos.setValidators(this.validarProductoUnico());
   }
   searchNameById(id : string) {
     return this.allProducts.find(p => p.id === id)?.name
@@ -129,7 +131,15 @@ export class CreateOrderComponent implements OnInit{
   validarCantProd(): ValidatorFn {
     return (control : AbstractControl): ValidationErrors | null => {
       const array = control as FormArray
-      return array.length < 1 ? {'minProd' : true} : null
+      return array.length <= 0 && array.length > 10 ? {'minProd' : true} : null
+    }
+  }
+  validarProductoUnico(): ValidatorFn {
+    return (control : AbstractControl): ValidationErrors | null => {
+      const array = control as FormArray
+      const ids = array.controls.map(control => control.get("productId")?.value)
+      const hasDuplicates = ids.some((id, index) => ids.indexOf(id) !== index)
+      return hasDuplicates ? { 'duplicates' : true} : null
     }
   }
 }
