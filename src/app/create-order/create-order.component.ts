@@ -124,7 +124,7 @@ export class CreateOrderComponent implements OnInit{
     let lastFourLetterEmail = email.slice(-4)
     let time = this.order.controls['timestamp'].value as Date
 
-    code = firstLetterName + lastFourLetterEmail + time.toString()
+    code = firstLetterName + lastFourLetterEmail + time.toTimeString().slice(0,4)
 
     return code
   }
