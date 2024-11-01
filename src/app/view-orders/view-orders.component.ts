@@ -12,33 +12,40 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './view-orders.component.html',
   styleUrl: './view-orders.component.css'
 })
-export class ViewOrdersComponent implements OnInit{
-  
-  serviceOrder : ApiService = inject(ApiService)
+export class ViewOrdersComponent implements OnInit {
 
-  allOrders : Order[] = []
-  filteredData : Order[] = []
+  serviceOrder: ApiService = inject(ApiService)
 
-  search : FormControl = new FormControl('')
+  allOrders: Order[] = []
+  filteredData: Order[] = []
+
+  search: FormControl = new FormControl('')
 
   ngOnInit(): void {
     this.getOrders()
   }
 
   getOrders() {
-    console.log("hola");
-    
-    this.serviceOrder.getOrders().subscribe(data => {
-      this.allOrders = data
-    })
-    this.search.valueChanges.subscribe(data => {
-      if(data === null || data === '') {
-        return this.getOrders()
+    this.serviceOrder.getOrders().subscribe({
+      next: (data) => {
+        this.allOrders = data
+        this.filteredData = data
+      },
+      error: (error) => {
+        console.error("Error", error)
       }
-      this.allOrders = this.allOrders.filter(order => {
-        order.customerName.toUpperCase().includes(data.toUpperCase()) || order.email.toUpperCase().includes(data.toUpperCase())
-      })
     })
-    console.log(this.allOrders);
+
+    this.search.valueChanges.subscribe(data => {
+      if (data === null || data === '') {
+        this.filteredData = this.allOrders
+      }
+      else {
+        this.filteredData = this.allOrders.filter(order => 
+            order.customerName.toUpperCase().includes(this.search.value.toUpperCase()) ||
+            order.email.toUpperCase().includes(this.search.value.toUpperCase())
+        )
+      }
+    })
   }
 }

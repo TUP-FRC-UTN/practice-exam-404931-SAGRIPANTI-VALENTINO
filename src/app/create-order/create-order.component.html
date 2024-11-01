@@ -8,13 +8,13 @@
             <div class="col-6">
                 <label class="form-label"> Nombre: </label> 
                 <br>
-                <input type="text" class="form-control" formControlName="nombre"
-                [ngClass]="{'is-invalid': order.controls['nombre'].invalid && (order.controls['nombre'].dirty || order.controls['nombre'].touched), 'is-valid' : order.controls['nombre'].valid}">
-                @if (order.controls['nombre'].invalid && (order.controls['nombre'].dirty || order.controls['nombre'].touched)) {
-                    @if (order.controls['nombre'].errors?.['required']) {
+                <input type="text" class="form-control" formControlName="customerName"
+                [ngClass]="{'is-invalid': order.controls['customerName'].invalid && (order.controls['customerName'].dirty || order.controls['customerName'].touched), 'is-valid' : order.controls['customerName'].valid}">
+                @if (order.controls['customerName'].invalid && (order.controls['customerName'].dirty || order.controls['customerName'].touched)) {
+                    @if (order.controls['customerName'].errors?.['required']) {
                         <div class="text-danger"> Campo Obligatorio </div>
                     }
-                    @if (order.controls['nombre'].errors?.['minlength']) {
+                    @if (order.controls['customerName'].errors?.['minlength']) {
                         <div class="text-danger"> Debe ingresar minimo 3 caracteres </div>
                     }
                 }
@@ -43,7 +43,7 @@
                 <span> <b>Productos</b> </span>
                 <button type="button" class="btn btn-primary" (click)="agregarProducto()">+</button>
             </div>
-            <div class="card-body" formArrayName="productos">
+            <div class="card-body" formArrayName="products">
                 @for (prod of productos.controls; track $index) {
                     <div class="row" [formGroupName]="$index">
                         <div class="col-3">
@@ -63,7 +63,7 @@
                         <div class="col-3">
                             <label class="form-label"> Cantidad </label> 
                             <br>
-                            <input type="number" class="form-control" formControlName="cantidad" (change)="onProductChange($index)">
+                            <input type="number" class="form-control" formControlName="quantity" (change)="onProductChange($index)">
                             @if (productos.errors?.['minProd']) {
                                 <div class="text-danger">
                                     Cantidad invalida
@@ -73,7 +73,7 @@
                         <div class="col-3">
                             <label class="form-label"> Precio </label> 
                             <br>
-                            <input type="text" class="form-control" formControlName="precio" [readonly]="true">
+                            <input type="text" class="form-control" formControlName="price" [readonly]="true">
                         </div>
                         <div class="col-3">
                             <label class="form-label"> Stock </label> 
@@ -94,9 +94,9 @@
             </div>
             <div class="card-body">
                 <ul>
-                    @for (p of order.controls['productos'].value; track $index) {
+                    @for (p of order.controls['products'].value; track $index) {
                         <li>
-                            {{searchNameById(p.productId) + " - Cantidad: " + p.cantidad + " - Precio: $" + p.precio + " - Stock: " + p.stock}}
+                            {{searchNameById(p.productId) + " - Cantidad: " + p.quantity + " - Precio: $" + p.price + " - Stock: " + p.stock}}
                         </li>
                     }
                 </ul>

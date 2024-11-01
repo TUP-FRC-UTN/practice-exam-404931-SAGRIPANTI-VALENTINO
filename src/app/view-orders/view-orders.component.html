@@ -25,7 +25,7 @@
                             <td> {{order.orderCode}} </td>
                             <td> {{order.customerName}} </td>
                             <td> {{order.email}} </td>
-                            <!-- <td> {{order.products.length + " items"}} </td> -->
+                            <td> {{order.products?.length + " items"}} </td>
                             <td> {{order.timestamp | date: 'dd/MM/yyyy'}} </td>
                             <td> {{"$" + order.total}} </td>
                         </tr>

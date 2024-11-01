@@ -19,9 +19,9 @@ export class CreateOrderComponent implements OnInit{
   discountDone : Boolean = false
 
   order: FormGroup = new FormGroup({
-    nombre : new FormControl('', [Validators.required, Validators.minLength(3)]),
+    customerName : new FormControl('', [Validators.required, Validators.minLength(3)]),
     email : new FormControl('', [Validators.required, Validators.email], this.validarComprarEmail()),
-    productos: new FormArray([], [this.validarCantProd(), this.validarProductoUnico()]),
+    products: new FormArray([], [this.validarCantProd(), this.validarProductoUnico()]),
     total : new FormControl(''),
     orderCode : new FormControl(''),
     timestamp : new FormControl(new Date())
@@ -35,14 +35,14 @@ export class CreateOrderComponent implements OnInit{
   }
 
   get productos() {
-    return this.order.controls['productos'] as FormArray
+    return this.order.controls['products'] as FormArray
   }
   agregarProducto() {
     const producto = new FormGroup({
       productId: new FormControl('', Validators.required),
-      cantidad: new FormControl(0, [Validators.required, Validators.min(1)]),
+      quantity: new FormControl(0, [Validators.required, Validators.min(1)]),
       stock: new FormControl(''),
-      precio: new FormControl('')
+      price: new FormControl('')
     });
     this.productos.push(producto);
     this.updateTotal()
@@ -86,7 +86,7 @@ export class CreateOrderComponent implements OnInit{
     if (selectedProduct) {
 
         this.productos.at(index).patchValue({
-            precio: selectedProduct.price, 
+            price: selectedProduct.price, 
             stock: selectedProduct.stock
         });
     }
@@ -100,8 +100,8 @@ export class CreateOrderComponent implements OnInit{
   calculateTotal() {
     let total = 0
     this.productos.controls.forEach(p => {
-      const cantidad = p.get('cantidad')?.value
-      const precio = p.get('precio')?.value
+      const cantidad = p.get('quantity')?.value
+      const precio = p.get('price')?.value
 
       total += cantidad * precio
     })
@@ -118,7 +118,7 @@ export class CreateOrderComponent implements OnInit{
   }
   generateOrderCode() {
     let code = ""
-    let name = this.order.controls['nombre'].value as string
+    let name = this.order.controls['customerName'].value as string
     let email = this.order.controls['email'].value as string
     let firstLetterName = name.charAt(0)
     let lastFourLetterEmail = email.slice(-4)

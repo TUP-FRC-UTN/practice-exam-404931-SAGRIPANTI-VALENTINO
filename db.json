@@ -97,20 +97,20 @@
       "timestamp": "2024-10-28T14:53:42.249Z"
     },
     {
-      "id": "79e8",
-      "nombre": "juan",
-      "email": "juan@juan.com",
-      "productos": [
+      "id": "5e1c",
+      "customerName": "emilio",
+      "email": "emilio@emilio.hotmail",
+      "products": [
         {
-          "productId": "4",
-          "cantidad": 2,
-          "stock": 120,
-          "precio": 199.99
+          "productId": "3",
+          "quantity": 3,
+          "stock": 75,
+          "price": 449.99
         }
       ],
-      "total": 399.98,
-      "orderCode": "j.comThu Oct 31 2024 16:59:27 GMT-0300 (hora estándar de Argentina)",
-      "timestamp": "2024-10-31T19:59:27.281Z"
+      "total": 1214.973,
+      "orderCode": "emailFr)",
+      "timestamp": "2024-11-01T04:49:05.110Z"
     }
   ]
 }
